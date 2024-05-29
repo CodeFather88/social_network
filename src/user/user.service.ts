@@ -5,7 +5,7 @@ import { genSalt, hash } from 'bcrypt'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   async create(user: Partial<User>) {
     const hashedPassword = await this.hashPassword(user.password)
@@ -19,8 +19,16 @@ export class UserService {
     return { status: 'ok', newUser }
   }
 
-  async getOne(id: string) {
-    return await this.prismaService.user.findFirst({ where: { id } })
+  async findOne(idOrEmail: string): Promise<User> {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        OR: [
+          { id: idOrEmail },
+          { email: idOrEmail }
+        ],
+      },
+    });
+    return user;
   }
 
   async delete(id: string) {

@@ -27,7 +27,7 @@ export class UserController {
   @ApiOperation({ summary: 'get one user' })
   @Get(':id')
   async getOneUser(@Param() dto: GetOneUserDto) {
-    return await this.userService.getOne(dto.id);
+    return await this.userService.findOne(dto.id);
   }
 
   @ApiOperation({ summary: 'Delete user' })
