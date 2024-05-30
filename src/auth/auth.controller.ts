@@ -1,14 +1,13 @@
-import { Controller, Post, Body, Get, Res, HttpStatus, UnauthorizedException, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Res, HttpStatus, UnauthorizedException } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Tokens } from './interfaces';
 import { ConfigService } from '@nestjs/config';
 import { Cookie } from '@shared/decorators/cookies.decorators';
 import { UserAgent } from '@shared/decorators/user-agent.decorator';
-import { agent } from 'supertest';
 import { Public } from '@shared/decorators/public.decorator';
 
 const REFRESH_TOKEN = 'refreshtoken'
