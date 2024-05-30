@@ -19,36 +19,44 @@ export class AuthService {
         return await this.userService.create(dto)
     }
 
-    async login(dto: LoginDto): Promise<Tokens> {
+    async login(dto: LoginDto, agent: string): Promise<Tokens> {
         const user = await this.userService.findOne(dto.email)
         if (!user || !compareSync(dto.password, user.password)) {
             throw new error('gg')
         }
-        return await this.generateTokens(user)
+        return await this.generateTokens(user, agent)
     }
 
-    private async generateTokens(user: User): Promise<Tokens> {
+    private async generateTokens(user: User, agent: string): Promise<Tokens> {
         const accessToken = this.jwtService.sign({ id: user.id, roles: user.roles })
-        const refreshToken = await this.getRefreshToken(user.id)
+        const refreshToken = await this.getRefreshToken(user.id, agent)
         return { accessToken, refreshToken }
     }
 
-    private async getRefreshToken(userId: string): Promise<Token> {
-        return this.prismaServise.token.create({
-            data: {
+    private async getRefreshToken(userId: string, agent: string): Promise<Token> {
+        const token = await this.prismaServise.token.findFirst({ where: { userId, userAgent: agent } })
+        return await this.prismaServise.token.upsert({
+            where: { token: token ? token.token : '' },
+            update: {
+                token: v4(),
+                exp: add(new Date(), { months: 1 })
+            },
+            create: {
                 token: v4(),
                 exp: add(new Date(), { months: 1 }),
-                userId
+                userId,
+                userAgent: agent
             }
         })
+
     }
 
-    async refreshTokens(refreshToken: string): Promise<Tokens> {
+    async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
         const token = await this.prismaServise.token.delete({ where: { token: refreshToken } })
         if (!token || new Date(token.exp) < new Date()) {
             throw new UnauthorizedException()
         }
         const user = await this.userService.findOne(token.userId)
-        return await this.generateTokens(user)
+        return await this.generateTokens(user, agent)
     }
 }

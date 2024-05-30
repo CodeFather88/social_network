@@ -8,6 +8,7 @@ import { Tokens } from './interfaces';
 import { ConfigService } from '@nestjs/config';
 import { Cookie } from '@shared/decorators/cookies.decorators';
 import { UserAgent } from '@shared/decorators/user-agent.decorator';
+import { agent } from 'supertest';
 
 const REFRESH_TOKEN = 'refreshtoken'
 
@@ -20,7 +21,7 @@ export class AuthController {
     @Post('login')
     async login(@Body() dto: LoginDto, @Res() res: Response, @UserAgent() agent: string) {
         console.log(agent)
-        const tokens = await this.authService.login(dto)
+        const tokens = await this.authService.login(dto, agent)
         if (!tokens) {
             return null
         }
@@ -36,11 +37,11 @@ export class AuthController {
 
     @ApiOperation({ summary: 'refresh-tokens' })
     @Get('refresh-tokens')
-    async refreshTokens(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response) {
+    async refreshTokens(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response, @UserAgent() agent: string) {
         if (!refreshToken) {
             throw new UnauthorizedException('Refresh token is required');
         }
-        const tokens = await this.authService.refreshTokens(refreshToken);
+        const tokens = await this.authService.refreshTokens(refreshToken, agent);
         if (!tokens) {
             throw new UnauthorizedException('Invalid refresh token');
         }
