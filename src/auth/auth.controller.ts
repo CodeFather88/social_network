@@ -9,10 +9,11 @@ import { ConfigService } from '@nestjs/config';
 import { Cookie } from '@shared/decorators/cookies.decorators';
 import { UserAgent } from '@shared/decorators/user-agent.decorator';
 import { agent } from 'supertest';
+import { Public } from '@shared/decorators/public.decorator';
 
 const REFRESH_TOKEN = 'refreshtoken'
-
 @ApiTags('Authorization')
+@Public()
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService, private readonly configService: ConfigService) { }
@@ -35,7 +36,7 @@ export class AuthController {
         return await this.authService.register(dto)
     }
 
-    @ApiOperation({ summary: 'refresh-tokens' })
+    @ApiOperation({ summary: 'refresh-tokens' })        
     @Get('refresh-tokens')
     async refreshTokens(@Cookie(REFRESH_TOKEN) refreshToken: string, @Res() res: Response, @UserAgent() agent: string) {
         if (!refreshToken) {
