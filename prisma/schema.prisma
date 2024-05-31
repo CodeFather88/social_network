@@ -30,4 +30,5 @@ model Token {
 enum Role {
     ADMIN
     USER
+    SUPERADMIN
 }

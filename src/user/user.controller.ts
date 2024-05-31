@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseUUIDPipe,
   Post,
 } from '@nestjs/common'
 import { UserService } from './user.service'
@@ -12,13 +11,16 @@ import { CreateUserDto } from './dto/createUser.dto'
 import { GetOneUserDto } from './dto/getOneUser.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DeleteUserDto } from './dto/deleteUser.dto';
+import { Role } from '@shared/enums';
+import { Roles } from '@shared/decorators';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @ApiOperation({ summary: 'Create user' })
+  @Roles(Role.ADMIN)
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
     return await this.userService.create(dto)

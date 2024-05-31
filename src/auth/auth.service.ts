@@ -13,7 +13,11 @@ import { error } from 'console';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly prismaServise: PrismaService, private readonly userService: UserService, private readonly jwtService: JwtService) { }
+    constructor(
+        private readonly prismaServise: PrismaService,
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService
+    ) { }
 
     async register(dto: RegisterDto) {
         return await this.userService.create(dto)
@@ -22,7 +26,7 @@ export class AuthService {
     async login(dto: LoginDto, agent: string): Promise<Tokens> {
         const user = await this.userService.findOne(dto.email)
         if (!user || !compareSync(dto.password, user.password)) {
-            throw new error('gg')
+            throw new UnauthorizedException('Invalid email or password');
         }
         return await this.generateTokens(user, agent)
     }
@@ -54,9 +58,12 @@ export class AuthService {
     async refreshTokens(refreshToken: string, agent: string): Promise<Tokens> {
         const token = await this.prismaServise.token.delete({ where: { token: refreshToken } })
         if (!token || new Date(token.exp) < new Date()) {
-            throw new UnauthorizedException()
+            throw new UnauthorizedException('Refresh token is invalid or expired')
         }
         const user = await this.userService.findOne(token.userId)
+        if (!user) {
+            throw new UnauthorizedException('User not found');
+        }
         return await this.generateTokens(user, agent)
     }
 }
