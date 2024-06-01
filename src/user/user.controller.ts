@@ -9,12 +9,13 @@ import {
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/createUser.dto'
 import { GetOneUserDto } from './dto/getOneUser.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DeleteUserDto } from './dto/deleteUser.dto';
 import { Role } from '@shared/enums';
 import { Roles } from '@shared/decorators';
 
 @ApiTags('User')
+@ApiBearerAuth()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
