@@ -1,6 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateChatDto } from './dto/createChat.dto';
 
 @ApiTags('Chats')
 @Controller('chat')
@@ -10,7 +9,7 @@ export class ChatController {
   }
 
   @ApiOperation({
-    summary: 'WebSocket Events',
+    summary: 'WebSocket Events ws://localhost:3000',
     description: `
 ### События WebSocket:
 

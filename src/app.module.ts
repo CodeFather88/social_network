@@ -8,15 +8,18 @@ import { ConfigModule } from '@nestjs/config'
 import { GUARDS } from '@auth/guards'
 import { JwtModule } from '@nestjs/jwt'
 import { options } from '@auth/config'
-import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
     UserModule,
     PrismaModule,
     AuthModule, 
+    MessageModule, 
+    SocketModule,
     JwtModule.registerAsync(options()), 
-    ConfigModule.forRoot({ isGlobal: true }), ChatModule,
+    ConfigModule.forRoot({ isGlobal: true }), SocketModule, 
   ],
   controllers: [AppController],
   providers: [AppService, ...GUARDS],

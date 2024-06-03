@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { CreateChatDto } from './dto/createChat.dto';
+import { GetUserChatsDto } from './dto/getUserChatsDto';
 
 @Injectable()
 export class ChatService {
@@ -30,6 +31,18 @@ export class ChatService {
                 },
             },
         });
+    }
+
+    async getUserChats(dto: GetUserChatsDto) {
+        return await this.prismaService.chat.findMany({
+            where: {
+                users: {
+                    some: {
+                        userId: dto.userId
+                    }
+                }
+            }
+        })
     }
 
 }
