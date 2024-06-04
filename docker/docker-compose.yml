@@ -1,10 +1,8 @@
-# Use postgres/example user/password credentials
-version: '3.5'
 
 services:
   postgres:
     container_name: postgres_container
-    build: postgres
+    build: ./postgres/postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
@@ -20,7 +18,7 @@ services:
 
   pgadmin:
     container_name: pgadmin_container
-    build: ./pgadmin
+    build: ./postgres/pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-123456}
