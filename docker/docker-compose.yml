@@ -30,8 +30,21 @@ services:
       - postgres
     restart: unless-stopped
 
+  redis:
+    container_name: redis
+    build: ./redis
+    # volumes:
+    #   - redis:/root/.redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - redis
+    restart: unless-stopped
+
 networks:
   postgres:
+    driver: bridge
+  redis:
     driver: bridge
 
 volumes:

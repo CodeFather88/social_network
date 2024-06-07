@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:up": "docker compose -f ./docker/docker-compose.yml up -d",
     "docker:down": "docker compose -f ./docker/docker-compose.yml down",
-    "prisma" : "npx prisma migrate dev --name docker_migrate"
+    "prisma": "npx prisma migrate dev --name docker_migrate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -39,6 +39,7 @@
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "passport": "^0.7.0",
+    "redis": "^4.6.14",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },

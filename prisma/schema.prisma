@@ -4,66 +4,110 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    url = env("DATABASE_URL")
+    url      = env("DATABASE_URL")
 }
 
 model User {
-    id String @id @default(uuid())
-    email String @unique
-    password String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @default(now()) @map("updated_at")
-    roles Role[]
-    token Token[]
-    messages Message[]
-    chats UserChat[]
+    id        String     @id @default(uuid()) @map("id")
+    email     String     @unique @map("email")
+    password  String     @map("password")
+    createdAt DateTime   @default(now()) @map("created_at")
+    updatedAt DateTime   @updatedAt @map("updated_at")
+    roles     Role[]
+    token     Token[]
+    messages  Message[]
+    chats     UserChat[]
+    posts     Post[]
+    likes     Like[]
+    comments  Comment[]
+
     @@map("users")
-}
-
-model Token {
-    token String @unique
-    exp DateTime
-    user User @relation(fields: [userId], references: [id])
-    userId String
-    userAgent String @map("user_agent")
-    @@map("tokens")
-}
-
-model Chat {
-    id String @id @default(uuid())
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @default(now()) @map("updated_at")
-    usersCount Int
-    messages Message[]
-    users UserChat[]
-    name String @default("Групповой чат")
-    creator String
-    @@map("chats")
-}
-
-model Message {
-    id String @id @default(uuid())
-    text String
-    userId String
-    chatId String
-    user User @relation(fields: [userId], references: [id])
-    chat Chat @relation(fields: [chatId], references: [id])
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @default(now()) @map("updated_at")
-    @@map("messages")
-}
-
-model UserChat {
-    userId String
-    chatId String
-    user User @relation(fields: [userId], references: [id])
-    chat Chat @relation(fields: [chatId], references: [id])
-    @@id([userId, chatId])
-    @@map("user_chats")
 }
 
 enum Role {
     ADMIN
     USER
     SUPERADMIN
+}
+
+model Token {
+    token     String   @unique @map("token")
+    exp       DateTime @map("exp")
+    userId    String   @map("user_id")
+    user      User     @relation(fields: [userId], references: [id])
+    userAgent String   @map("user_agent")
+
+    @@map("tokens")
+}
+
+model Chat {
+    id         String     @id @default(uuid()) @map("id")
+    createdAt  DateTime   @default(now()) @map("created_at")
+    updatedAt  DateTime   @updatedAt @map("updated_at")
+    usersCount Int        @map("users_count")
+    name       String     @default("Групповой чат")
+    creator    String     @map("creator")
+    messages   Message[]
+    users      UserChat[]
+
+    @@map("chats")
+}
+
+model Message {
+    id        String   @id @default(uuid()) @map("id")
+    text      String   @map("text")
+    userId    String   @map("user_id")
+    chatId    String   @map("chat_id")
+    user      User     @relation(fields: [userId], references: [id])
+    chat      Chat     @relation(fields: [chatId], references: [id])
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("messages")
+}
+
+model UserChat {
+    userId String @map("user_id")
+    chatId String @map("chat_id")
+    user   User   @relation(fields: [userId], references: [id])
+    chat   Chat   @relation(fields: [chatId], references: [id])
+
+    @@id([userId, chatId])
+    @@map("user_chats")
+}
+
+model Like {
+    id     String @id @default(uuid()) @map("id")
+    userId String @map("user_id")
+    postId String @map("post_id")
+    user   User   @relation(fields: [userId], references: [id])
+    post   Post   @relation(fields: [postId], references: [id])
+
+    @@unique([userId, postId])
+    @@map("likes")
+}
+
+model Comment {
+    id        String   @id @default(uuid()) @map("id")
+    userId    String   @map("user_id")
+    postId    String   @map("post_id")
+    text      String
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    user      User     @relation(fields: [userId], references: [id])
+    Post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Post {
+    id        String    @id @default(uuid()) @map("id")
+    userId    String    @map("user_id")
+    user      User      @relation(fields: [userId], references: [id])
+    title     String    @map("title")
+    content   String    @map("content")
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+    likes     Like[] 
+    comments  Comment[]
+
+    @@map("posts")
 }

@@ -6,7 +6,6 @@ import { Tokens } from './interfaces';
 import { ConfigService } from '@nestjs/config';
 import { Cookie, Public, UserAgent } from '@shared/decorators';
 import { LoginDto, RegisterDto } from './dto';
-import { Role } from '@shared/enums';
 import { TokenService } from 'src/token/token.service';
 
 const REFRESH_TOKEN = 'refreshtoken'

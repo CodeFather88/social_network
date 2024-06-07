@@ -10,16 +10,24 @@ import { JwtModule } from '@nestjs/jwt'
 import { options } from '@auth/config'
 import { MessageModule } from './message/message.module';
 import { SocketModule } from './socket/socket.module';
+import { RedisModule } from './redis/redis.module';
+import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
+import { LikeModule } from './like/like.module';
 
 @Module({
   imports: [
+    JwtModule.registerAsync(options()), 
+    ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     PrismaModule,
     AuthModule, 
     MessageModule, 
     SocketModule,
-    JwtModule.registerAsync(options()), 
-    ConfigModule.forRoot({ isGlobal: true }), SocketModule, 
+    RedisModule,
+    PostModule,
+    CommentModule,
+    LikeModule, 
   ],
   controllers: [AppController],
   providers: [AppService, ...GUARDS],
