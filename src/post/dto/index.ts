@@ -1,1 +1,1 @@
-export * from './createPost.dto'
+export * from './createPost.dto';

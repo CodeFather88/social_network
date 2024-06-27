@@ -10,16 +10,16 @@ import { MessageService } from 'src/message/message.service';
 import { MessageModule } from 'src/message/message.module';
 
 @Module({
-  providers: [
-    // ChatGateway,
-    ChatService, 
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard
-    }
-  ],
-  imports: [JwtModule.registerAsync(options()), MessageModule],
-  controllers: [ChatController],
-  exports: [ChatService]
+	providers: [
+		// ChatGateway,
+		ChatService,
+		{
+			provide: APP_GUARD,
+			useClass: AuthGuard,
+		},
+	],
+	imports: [JwtModule.registerAsync(options()), MessageModule],
+	controllers: [ChatController],
+	exports: [ChatService],
 })
 export class ChatModule {}

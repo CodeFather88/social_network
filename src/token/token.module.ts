@@ -6,8 +6,8 @@ import { UserService } from '@user/user.service';
 import { UserModule } from '@user/user.module';
 
 @Module({
-  imports: [JwtModule.registerAsync(options()), UserModule],
-  providers: [TokenService,],
-  exports: [TokenService]
+	imports: [JwtModule.registerAsync(options()), UserModule],
+	providers: [TokenService],
+	exports: [TokenService],
 })
-export class TokenModule { }
+export class TokenModule {}

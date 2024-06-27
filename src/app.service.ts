@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  ping() {
-    return {status: 'ok'}
-  }
+	ping() {
+		return { status: 'ok' };
+	}
 }

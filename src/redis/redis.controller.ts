@@ -7,10 +7,10 @@ import { Public } from '@shared/decorators';
 @Public()
 @Controller('redis')
 export class RedisController {
-    constructor(private readonly redisService: RedisService) { }
+	constructor(private readonly redisService: RedisService) {}
 
-    @Get('test')
-    async test() {
-        await this.redisService.test()
-    }
+	@Get('test')
+	async test() {
+		await this.redisService.test();
+	}
 }

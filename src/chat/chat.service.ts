@@ -5,44 +5,43 @@ import { GetUserChatsDto } from './dto/getUserChatsDto';
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly prismaService: PrismaService) { }
+	constructor(private readonly prismaService: PrismaService) {}
 
-    async create(dto: CreateChatDto, currentUserId: string) {
-        const usersExist = await this.prismaService.user.count({
-            where: {
-                id: { in: dto.addedUsers },
-            },
-        });
-        if (usersExist !== dto.addedUsers.length) {
-            throw new Error('Некоторые пользователи не найдены');
-        }
-        const usersInChat = [...dto.addedUsers, currentUserId]
-        return await this.prismaService.chat.create({
-            data: {
-                name: dto.name,
-                creator: currentUserId,
-                usersCount: usersInChat.length,
-                users: {
-                    create: usersInChat.map(userId => ({
-                        user: {
-                            connect: { id: userId },
-                        },
-                    })),
-                },
-            },
-        });
-    }
+	async create(dto: CreateChatDto, currentUserId: string) {
+		const usersExist = await this.prismaService.user.count({
+			where: {
+				id: { in: dto.addedUsers },
+			},
+		});
+		if (usersExist !== dto.addedUsers.length) {
+			throw new Error('Некоторые пользователи не найдены');
+		}
+		const usersInChat = [...dto.addedUsers, currentUserId];
+		return await this.prismaService.chat.create({
+			data: {
+				name: dto.name,
+				creator: currentUserId,
+				usersCount: usersInChat.length,
+				users: {
+					create: usersInChat.map((userId) => ({
+						user: {
+							connect: { id: userId },
+						},
+					})),
+				},
+			},
+		});
+	}
 
-    async getUserChats(dto: GetUserChatsDto) {
-        return await this.prismaService.chat.findMany({
-            where: {
-                users: {
-                    some: {
-                        userId: dto.userId
-                    }
-                }
-            }
-        })
-    }
-
+	async getUserChats(dto: GetUserChatsDto) {
+		return await this.prismaService.chat.findMany({
+			where: {
+				users: {
+					some: {
+						userId: dto.userId,
+					},
+				},
+			},
+		});
+	}
 }

@@ -4,13 +4,13 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 @ApiTags('Chats')
 @Controller('chat')
 export class ChatController {
-    constructor() {
-      const a = 'd'
-  }
+	constructor() {
+		const a = 'd';
+	}
 
-  @ApiOperation({
-    summary: 'WebSocket Events ws://localhost:3000',
-    description: `
+	@ApiOperation({
+		summary: 'WebSocket Events ws://localhost:3000',
+		description: `
 ### События WebSocket:
 
 #### \`createChat\`
@@ -63,9 +63,9 @@ export class ChatController {
 
     Событие, отправляемое при присоединении нового пользователя к чату.
 `,
-  })
-  @Get('events')
-  async getWebSocketEvents(): Promise<string> {
-    return 'List of WebSocket events';
-  }
+	})
+	@Get('events')
+	async getWebSocketEvents(): Promise<string> {
+		return 'List of WebSocket events';
+	}
 }
