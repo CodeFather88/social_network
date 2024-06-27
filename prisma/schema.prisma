@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-    id        String     @id @default(uuid()) @map("id")
-    email     String     @unique @map("email")
-    password  String     @map("password")
-    createdAt DateTime   @default(now()) @map("created_at")
-    updatedAt DateTime   @updatedAt @map("updated_at")
+    id        String     @id @default(uuid())
+    email     String     @unique
+    password  String
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
     roles     Role[]
     token     Token[]
     messages  Message[]
@@ -31,8 +31,8 @@ enum Role {
 }
 
 model Token {
-    token     String   @unique @map("token")
-    exp       DateTime @map("exp")
+    token     String   @unique
+    exp       DateTime
     userId    String   @map("user_id")
     user      User     @relation(fields: [userId], references: [id])
     userAgent String   @map("user_agent")
@@ -41,12 +41,12 @@ model Token {
 }
 
 model Chat {
-    id         String     @id @default(uuid()) @map("id")
-    createdAt  DateTime   @default(now()) @map("created_at")
-    updatedAt  DateTime   @updatedAt @map("updated_at")
+    id         String     @id @default(uuid())
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
     usersCount Int        @map("users_count")
     name       String     @default("Групповой чат")
-    creator    String     @map("creator")
+    creator    String
     messages   Message[]
     users      UserChat[]
 
@@ -54,14 +54,14 @@ model Chat {
 }
 
 model Message {
-    id        String   @id @default(uuid()) @map("id")
-    text      String   @map("text")
+    id        String   @id @default(uuid())
+    text      String
     userId    String   @map("user_id")
     chatId    String   @map("chat_id")
     user      User     @relation(fields: [userId], references: [id])
     chat      Chat     @relation(fields: [chatId], references: [id])
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("messages")
 }
@@ -77,7 +77,7 @@ model UserChat {
 }
 
 model Like {
-    id     String @id @default(uuid()) @map("id")
+    id     String @id @default(uuid())
     userId String @map("user_id")
     postId String @map("post_id")
     user   User   @relation(fields: [userId], references: [id])
@@ -88,25 +88,27 @@ model Like {
 }
 
 model Comment {
-    id        String   @id @default(uuid()) @map("id")
+    id        String   @id @default(uuid())
     userId    String   @map("user_id")
     postId    String   @map("post_id")
     text      String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     user      User     @relation(fields: [userId], references: [id])
     Post      Post     @relation(fields: [postId], references: [id])
+
+    @@map("comments")
 }
 
 model Post {
-    id        String    @id @default(uuid()) @map("id")
-    userId    String    @map("user_id")
+    id        String    @id @default(uuid())
+    userId    String
     user      User      @relation(fields: [userId], references: [id])
-    title     String    @map("title")
-    content   String    @map("content")
-    createdAt DateTime  @default(now()) @map("created_at")
-    updatedAt DateTime  @updatedAt @map("updated_at")
-    likes     Like[] 
+    title     String
+    content   String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    likes     Like[]
     comments  Comment[]
 
     @@map("posts")
